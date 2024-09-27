@@ -14,21 +14,21 @@ fn main() {
     print!("{}[2J", 27 as char);                /* clear the terminal screen */
     println!("ToRust - To-Do CLI Tool for Rustaceans!");
     println!("Made by: ValentinMENDIss");
-    
+
     /* declaration of variables/lists/... */
     let mut my_list: Vec<String> = Vec::new();      /* create/declare list for strings */
 
 /* repeated loop (main code) */
 loop {
         println!("\nWhich function do you want to perform? (type 'h' for help): ");
-    
+
         let mut inputfunction = String::new();
 
         io::stdin()
             .read_line(&mut inputfunction)
             .expect("Failed to read line (inputfunction)");
 
-        inputfunction.pop();    /* trim text (delete newlines(\n)) */
+        let inputfunction = inputfunction.trim();    /* trim text (delete newlines(\n)) */
 
         if inputfunction == "h" {
             print!("{}[2J", 27 as char);                /* clear the terminal screen */
@@ -36,6 +36,7 @@ loop {
             println!("r: read todolist that was created in current session");
             println!("rs: read saved todolist (located in src/todolist/list.txt)");
             println!("cl: clear the terminal screen");
+            println!("quit: quit program");
         }
 
         else if inputfunction == "a" {
@@ -50,12 +51,12 @@ loop {
                 io::stdin()
                     .read_line(&mut inputcreate)
                     .expect("Failed to read line (create todo task)");
-           
+
                 if inputcreate.trim() == "quit" {
                     break;
                 }
                 my_list.push(inputcreate.trim().to_string());
-                
+
                 writer.write(inputcreate.as_bytes()).expect("Could not write to list.txt file");
                 /* Flush the writer to ensure that all data is written to the file */
                 writer.flush().expect("Could not flush writer");
@@ -80,9 +81,11 @@ loop {
             // You can now use the `lines` vector as output
             for line in &lines {
                 println!("{}", line);
-            }           
+            }
         } else if inputfunction == "cl" {
             print!("{}[2J", 27 as char);    /* clear the terminal screen */
+        } else if inputfunction == "quit" {
+            break;
         } else {
             println!("Sorry, there is no such function...");
         }
