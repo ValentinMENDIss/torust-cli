@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 /* main loop/function  */
 fn main() {
     /* printing project's info */
+    print!("{}[2J", 27 as char);                /* clear the terminal screen */
     println!("ToRust - To-Do CLI Tool for Rustaceans!");
     println!("Made by: ValentinMENDIss");
     
@@ -19,7 +20,7 @@ fn main() {
 
 /* repeated loop (main code) */
 loop {
-        println!("\nWhich function do you want to perform? (create/read/readtxt): ");
+        println!("\nWhich function do you want to perform? (type 'h' for help): ");
     
         let mut inputfunction = String::new();
 
@@ -28,9 +29,16 @@ loop {
             .expect("Failed to read line (inputfunction)");
 
         inputfunction.pop();    /* trim text (delete newlines(\n)) */
-        println!("Your input is: {}", inputfunction);
 
-        if inputfunction == "create" {
+        if inputfunction == "h" {
+            print!("{}[2J", 27 as char);                /* clear the terminal screen */
+            println!("a: add/create new todolist");
+            println!("r: read todolist that was created in current session");
+            println!("rs: read saved todolist (located in src/todolist/list.txt)");
+            println!("cl: clear the terminal screen");
+        }
+
+        else if inputfunction == "a" {
             /* declaration of variables */
             let path = PathBuf::from("./src/todolist/list.txt");
             let file = File::create(path).expect("Could not create list.txt file");
@@ -53,11 +61,11 @@ loop {
                 writer.flush().expect("Could not flush writer");
             }
 
-        } else if inputfunction == "read" {
+        } else if inputfunction == "r" {
             for s in &my_list {
                 println!("\n{}", s);
             }
-        } else if inputfunction == "readtxt" {
+        } else if inputfunction == "rs" {
             let path = Path::new("./src/todolist/list.txt");
             let file = File::open(path).unwrap();
             let reader = io::BufReader::new(file);
@@ -73,10 +81,9 @@ loop {
             for line in &lines {
                 println!("{}", line);
             }           
-        }
-
-
-        else {
+        } else if inputfunction == "cl" {
+            print!("{}[2J", 27 as char);    /* clear the terminal screen */
+        } else {
             println!("Sorry, there is no such function...");
         }
 }
