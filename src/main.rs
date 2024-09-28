@@ -32,19 +32,16 @@ loop {
 
         if inputfunction == "h" {
             print!("{}[2J", 27 as char);                /* clear the terminal screen */
-            println!("a: add/create new todolist");
-            println!("r: read todolist that was created in current session");
-            println!("rs: read saved todolist (located in src/todolist/list.txt)");
+            println!("a: add/create new todo-list");
+            println!("s: save todo-list in current session to the .txt file");
+            println!("r: read todo-list that was created in current session");
+            println!("rs: read saved todo-list (located in src/todolist/list.txt)");
             println!("cl: clear the terminal screen");
             println!("quit: quit program");
         }
 
-        else if inputfunction == "a" {
-            /* declaration of variables */
-            let path = PathBuf::from("./src/todolist/list.txt");
-            let file = File::create(path).expect("Could not create list.txt file");
-            let mut writer = BufWriter::new(file);
 
+        else if inputfunction == "a" {
             loop {
                 let mut inputcreate = String::new();
                 println!("\nEnter a task (or type 'quit' to exit): ");
@@ -56,11 +53,7 @@ loop {
                     break;
                 }
                 my_list.push(inputcreate.trim().to_string());
-
-                writer.write(inputcreate.as_bytes()).expect("Could not write to list.txt file");
-                /* Flush the writer to ensure that all data is written to the file */
-                writer.flush().expect("Could not flush writer");
-            }
+           }
 
         } else if inputfunction == "r" {
             for s in &my_list {
@@ -82,10 +75,29 @@ loop {
             for line in &lines {
                 println!("{}", line);
             }
+        } else if inputfunction == "s" {
+            /* declaration of variables */
+            let path = PathBuf::from("./src/todolist/list.txt");
+            let file = File::create(path).expect("Could not create list.txt file");
+            let mut writer = BufWriter::new(file);
+            let mut inputsave = String::new();
+
+            for line in &my_list {
+                inputsave.push_str(line);
+                inputsave.push_str("\n");
+            }
+
+            /* write to the file */
+            writer.write(inputsave.as_bytes()).expect("Could not write to list.txt file");
+            /* flush the writer to ensure that all data is written to the file */
+            writer.flush().expect("Could not flush writer");
+
         } else if inputfunction == "cl" {
             print!("{}[2J", 27 as char);    /* clear the terminal screen */
+
         } else if inputfunction == "quit" {
             break;
+
         } else {
             println!("Sorry, there is no such function...");
         }
